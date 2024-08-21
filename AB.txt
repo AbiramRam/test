@@ -1,0 +1,135 @@
+Opening a New File
+Step 1 type vim filename (create a file named filename)
+Step 2 type i ( switch to insert mode)
+Step 3 enter text (enter your Ada program)
+Step 4 hit Esc key (switch back to command mode)
+Step 5 type :wq (write file and exit vim)
+
+Step 2 move around the file using h/j/k/l key or any appropriate command
+
+1. List all process in current shell.
+• $ ps
+2. Display every active processes
+• $ ps -A
+• $ ps -e
+3. Display all process and process not associated with terminal
+• $ ps -au or
+• $ ps -aux
+a - list the processes of all the users
+u - to provide detailed information about each process
+x - add to the list process that have no controlling terminal, such as daemon, which are
+programs, that are launched during booting and run in the background until they are
+activated by the particular event.
+4. To perform full-format listing.
+• $ ps -ef OR $ ps -eF
+5. To select all the process owned by the user.
+• $ ps -x
+6. To display users, process by real user id or name.
+• $ ps -fu guesttc (your username)
+OR
+• $ ps -fu 1002 (to see the user id: id -u username)
+7. To Display root process
+• $ ps -fu root
+OR
+• $ ps -fu 0
+8. Display Group process
+• $ ps -fg guesttc
+OR
+• $ ps -fg 1008
+to find the group id getent group | grep mygroup) or (cat /etc/group | grep mygroup)
+9. Display process by PID and PPID
+• $ ps -fp 1588 - Select process by ppid
+• $ ps -f --ppid 1587 - Make Selection Using PID List
+• $ ps -fp 1394,1587
+10. Print process tree
+• $ ps -e --forest
+From this tree we can identify which is the parent process and the child process it forked
+in a recursive manner.
+To print the process tree for a given process.
+• $ ps -f --forest -C sshd ( -C for command )
+OR
+• $ ps -ef --forest | grep sshd
+11. Print Process Threads
+• $ ps -fL -C sshd
+Output:
+LWP: Light Weight Process
+NLWP: Number of Light Weight Process
+12. Troubleshoot Linux System Performance.
+To find top running process
+• $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
+pass the line number as -n parameter.
+• $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 15
+If you want to sort by cpu value
+• $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head
+If you want to stop any process that is consuming high cpu time
+• $ kill -o pid
+<?php
+$host = "localhost";
+$dbusername = "root";
+$dbpassword = "Testwebpw1$";
+$dbname = "myDB";
+//Create Connection
+$conn = new mysqli ($host, $dbusername, $dbpassword,
+$dbname);
+$username = $_POST['uname'];
+$password = $_POST['upassword'];
+//Insert value in database table
+$sql = "INSERT INTO user (name, password) values
+('$username', '$password')";
+if($conn->query($sql)){
+echo "New record is inserted successfully";
+}
+else {
+echo "Error: ". $sql . "<br>". $conn->error;
+}
+$conn->close();
+?>
+
+1. Check/Display all available network interface
+• $ip link show
+2. Identifying Ethernet Interfaces
+• $sudo ip a OR $ip a
+[Loopback address is a software address (127.0.0.1)]
+• $sudo ip addr OR $ip addr
+• $sudo lshw –class network
+[Detailed hardware information about network cards on Linux]
+3. Check the current IP of the server
+• $ifconfig
+4. Temporary IP address assignment
+1) Temporary IP address assigning (This will work on real environment & it is not
+physically connected to the network)
+$sudo ip addr add 10.0.2.20/24 dev enp0s3
+$sudo ip link set dev enp0s3 down
+$sudo ip link set dev enp0s3 up
+$ip address show dev enp0s3
+2) Configure Default gateway
+$sudo ip route add default via 10.0.2.1
+$sudo ip route show (to see the default gateway)
+3) Add temporary DNS Client address
+✓ Edit /etc/resolv.conf
+$sudo vi /etc/resolv.conf
+Add nameserver 8.8.8.8
+4) To delete all IP configuration
+$sudo ip addr flush enp0s3
+5. Static IP Address assignment.
+• Go to netplan directory
+$cd /etc/netplan
+• List out the contents in the netplan
+$ll
+
+Open the .yaml file
+$sudo vi 00-installer-config.yaml
+
+Then apply the changers
+$sudo netplan apply
+• See the IP address by giving the command “ifconfig”
+$ifconfig
+
+Dynamic IP Address Assignment (DHCP)
+To configure your server to use DHCP dynamic address assignment
+• open the file “/etc/netplan/50-cloud-init.yaml”
+$sudo vi /etc/netplan/00-installer-config.yaml
+Keep the dhcp4 = true
+Save the file and exit
+• Apply the changes on configuration by giving the command “netplan apply”
+$sudo netplan apply
