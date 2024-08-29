@@ -1,0 +1,139 @@
+public class Rail {
+    
+    public static String encrypt(String text, int key) {
+        if (key == 1) return text; 
+
+        StringBuilder[] rail = new StringBuilder[key];
+        for (int i = 0; i < key; i++) {
+            rail[i] = new StringBuilder();
+        }
+
+        int direction = 1; 
+        int row = 0;
+
+        for (char c : text.toCharArray()) {
+            rail[row].append(c);
+            row += direction;
+
+            if (row == 0 || row == key - 1) {
+                direction *= -1;
+            }
+        }
+
+        StringBuilder encrypted = new StringBuilder();
+        for (StringBuilder sb : rail) {
+            encrypted.append(sb);
+        }
+
+        return encrypted.toString();
+    }
+    
+    public static String decrypt(String cipherText, int key) {
+    if (key == 1) return cipherText;
+
+    int length = cipherText.length();
+    char[] decrypted = new char[length];
+    boolean[] visited = new boolean[length];
+
+    int index = 0;
+    for (int r = 0; r < key; r++) {
+        int direction = 1;
+        int row = 0;
+        for (int i = 0; i < length; i++) {
+            if (row == r && !visited[i]) {
+                decrypted[i] = cipherText.charAt(index++);
+                visited[i] = true;
+            }
+            row += direction;
+            if (row == 0 || row == key - 1) direction *= -1;
+        }
+    }
+    return new String(decrypted);
+}
+
+
+import java.util.*; // Encryption and Decryption methods
+public class CaesarCipher
+{
+	String readtext;
+	char Arraytext[];
+	char alphbet[]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	
+	int k,key; // give integer value as the key
+	static Scanner s=new Scanner(System.in);
+	
+	public CaesarCipher()
+	
+	{
+		System.out.print("Enter your text:");
+		readtext=s.nextLine();
+		System.out.print("Enter your key:");
+		key=s.nextInt();
+		readtext=readtext.toUpperCase();
+		Arraytext=readtext.toCharArray();
+	}
+	public void Encript()// Encryption method
+	{
+
+		for (int i=0; i<Arraytext.length;i++)
+		{
+			if(Arraytext[i]==' '){
+				System.out.print(' ');
+				continue;
+			}
+				
+			for (int j=0; j<alphbet.length;j++)
+			{
+				
+				if(Arraytext[i]==alphbet[j])
+				{
+					k=(j+key)%26;
+					//System.out.println(k);
+				}
+				
+			}
+			System.out.print(alphbet[k]);
+		}
+	}
+	public void Decript()// Decryption method
+	{
+		
+		for (int i=0; i<Arraytext.length;i++)
+		{
+			if(Arraytext[i]==' '){
+				System.out.print(' ');
+				continue;
+			}
+			
+			for (int j=0; j<alphbet.length;j++)
+			{
+				if(Arraytext[i]==alphbet[j])
+				{
+					k=(j-key+26)%26;
+				}
+				
+			}
+			System.out.print(alphbet[k]);
+		}
+	}
+	public static void main(String[]args)
+	{
+		CaesarCipher c=new CaesarCipher();
+	
+		System.out.print("Do you want Encript(1) or Decript(0)? .....(1/0):");
+		int choose=s.nextInt();
+		if(choose==1)
+		
+			c.Encript();
+		
+		
+		else
+			
+			c.Decript();
+		
+	}
+}
+
+	
+	
+	
