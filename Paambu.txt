@@ -1,0 +1,255 @@
+.data
+command: .asciiz "\nCommand (0:Add, 1:Subtract, 2:Multiply, 3:Divide, 4:Clear, 5:Exit): "
+input:  .asciiz "\nEnter number: "
+result: .asciiz "\nCurrent value: "
+newline:  .asciiz "\n"
+
+.text
+
+main:
+    li $v0, 0               
+    move $t0, $v0        
+
+loop:
+    li $v0, 4
+    la $a0, command
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t1, $v0           
+
+    li $t2, 5
+    beq $t1, $t2, exit
+
+    li $t2, 4
+    beq $t1, $t2, clear
+
+    li $v0, 4
+    la $a0, input
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t3, $v0          
+
+    li $t2, 0               
+    beq $t1, $t2, adding
+
+    li $t2, 1              
+    beq $t1, $t2, subtract
+
+    li $t2, 2              
+    beq $t1, $t2, multiply
+
+    li $t2, 3               
+    beq $t1, $t2, divide
+
+    j loop
+
+adding:
+    add $t0, $t0, $t3       
+    j print
+
+subtract:
+    sub $t0, $t0, $t3       
+    j print
+
+multiply:
+    mul $t0, $t0, $t3      
+    j print
+
+divide:
+    beq $t3, $zero, divide_error #If entered value is 0 
+    div $t0, $t0, $t3       
+    j print
+
+divide_error:
+    li $v0, 4
+    la $a0, newline
+    syscall
+    j loop
+
+clear:
+    li $t0, 0             
+    j print
+
+print:
+   
+    li $v0, 4
+    la $a0, result
+    syscall
+
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    j loop
+
+exit:
+    li $v0, 10              
+    syscall
+
+//////////////
+
+.data
+input:        .asciiz "\nEnter a number: "
+positive_number:  .asciiz "\nThe number is positive.\n"
+negative_number:  .asciiz "\nThe number is negative.\n"
+zero:      .asciiz "\nThe number is zero.\n"
+
+.text
+
+main:
+    li $v0, 4                
+    la $a0, input           
+    syscall
+
+    li $v0, 5                
+    syscall
+    move $t0, $v0            
+
+    blez $t0, check_negative
+    li $v0, 4                
+    la $a0, positive_number     
+    syscall
+    j exit          
+
+check_negative:
+    bne $t0, $zero, negative
+    li $v0, 4                
+    la $a0, zero         
+    syscall
+    j exit
+
+negative:
+    li $v0, 4                
+    la $a0, negative_number
+    syscall
+
+exit:
+    li $v0, 10               
+    syscall
+
+
+//////
+
+.data
+    num1_prompt: .asciiz "Enter the first single-digit number: "
+    num2_prompt: .asciiz "Enter the second single-digit number: "
+    result_sum:  .asciiz "Sum: "
+    result_sub:  .asciiz "Subtraction: "
+    result_mul:  .asciiz "Multiplication: "
+    result_div:  .asciiz "Division: "
+    newline:     .asciiz "\n"
+
+.text
+main:
+    # Input first number
+    li $v0, 4
+    la $a0, num1_prompt
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t0, $v0  # Store first number in $t0
+
+    # Input second number
+    li $v0, 4
+    la $a0, num2_prompt
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t1, $v0  # Store second number in $t1
+
+    # Sum
+    add $t2, $t0, $t1
+    li $v0, 4
+    la $a0, result_sum
+    syscall
+    li $v0, 1
+    move $a0, $t2
+    syscall
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    # Subtraction
+    sub $t2, $t0, $t1
+    li $v0, 4
+    la $a0, result_sub
+    syscall
+    li $v0, 1
+    move $a0, $t2
+    syscall
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    # Multiplication
+    mul $t2, $t0, $t1
+    li $v0, 4
+    la $a0, result_mul
+    syscall
+    li $v0, 1
+    move $a0, $t2
+    syscall
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    # Division
+    div $t0, $t1
+    mflo $t2
+    li $v0, 4
+    la $a0, result_div
+    syscall
+    li $v0, 1
+    move $a0, $t2
+    syscall
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    # Exit
+    li $v0, 10
+    syscall
+
+/////
+
+.data
+    msg: .asciiz "Numbers from 9 to 1:\n"
+    newline: .asciiz "\n"
+
+.text
+main:
+    # Print the initial message
+    li $v0, 4
+    la $a0, msg
+    syscall
+
+    # Initialize the counter to 9
+    li $t0, 15
+
+loop:
+    # Print the current number
+    li $v0, 1  # Print integer syscall
+    move $a0, $t0
+    syscall
+
+    # Print a newline
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    # Decrement the counter
+    subi $t0, $t0, 1
+
+    # Continue the loop if the counter is greater than 0
+    bgtz $t0, loop
+
+    # Exit
+    li $v0, 10
+    syscall
+
