@@ -1,0 +1,128 @@
+package test01;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class testing {
+
+	public static void main(String[] args) {
+		//set property to launch chrome driver
+		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+		//initialize chrome driver instance
+		WebDriver driver = new ChromeDriver();
+		//load and view the local file using chrome
+		driver.navigate().to("http://localhost/employee/admin/index.php");
+		//set browser screen full size
+		driver.manage().window().maximize();
+		
+		//to test the website fileds
+		WebElement userN = driver.findElement(By.name("username"));
+		userN.sendKeys("admin");
+		
+		WebElement passW = driver.findElement(By.name("password"));
+		passW.sendKeys("admin123");
+		
+		if(userN.getAttribute("value").isEmpty()) {
+			System.out.println("User name is empty");
+		}
+		
+		else if(passW.getAttribute("value").isEmpty()) {
+			System.out.println("Password is empty");
+		}
+		
+		else {
+			driver.findElement(By.xpath("//button[text()='Login ']")).click();
+		}
+	}
+
+}
+
+
+package test02;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Testing {
+
+	public static void main(String[] args) {
+		//set property to launch chrome driver
+				System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+				//initialize chrome driver instance
+				WebDriver driver = new ChromeDriver();
+				//load and view the local file using chrome
+				driver.navigate().to("file:///C:/Users/abira/OneDrive/Desktop/STUDY/Testing%20HTML%20File-20241209/registration.html");
+				//set browser screen full size
+				driver.manage().window().maximize();
+				//to test the website fileds
+				driver.findElement(By.name("fn")).sendKeys("Vishva");
+				driver.findElement(By.id("fn2")).sendKeys("Kunjan");
+				driver.findElement(By.name("pass1")).sendKeys("0123");
+				driver.findElement(By.name("pass2")).sendKeys("0123");
+				driver.findElement(By.id("email")).sendKeys("test@gmail.com");
+				driver.findElement(By.name("mobile")).sendKeys("0771234567");
+				driver.findElement(By.id("description")).sendKeys("welcome to selenium testing");
+				WebElement radio1 = driver.findElement(By.id("male"));
+				radio1.click();
+				WebElement hobbie1 = driver.findElement(By.className("automation1"));
+				hobbie1.click();
+				driver.findElement(By.name("country")).sendKeys("Sri Lanka");
+				driver.findElement(By.xpath("//button[text()='Reset ']")).click();
+	}
+
+}
+
+
+
+import org.testng.annotations.Test;
+
+
+public class NewTest {
+
+	    // Test method for sign up
+	    @Test(priority = 1)
+	    public void signUp() {
+	        System.out.println("Running signUp method...");
+	        // Add your test logic here
+	    }
+
+	    // Test method for login
+	    @Test(priority = 2)
+	    public void login() {
+	        System.out.println("Running login method...");
+	        // Add your test logic here
+	    }
+
+	    // Test method for searching a product
+	    @Test(dependsOnMethods = "login()")
+	    public void searchProduct() {
+	        System.out.println("Running searchProduct method...");
+	        // Add your test logic here
+	    }
+
+	    // Test method for adding a product to the cart
+	    @Test(priority = 2)
+	    public void addToCart() {
+	        System.out.println("Running addToCart method...");
+	        // Add your test logic here
+	    }
+
+	    // Test method for sign out
+	    @Test(priority = 5)
+	    public void signOut() {
+	        System.out.println("Running signOut method...");
+	        // Add your test logic here
+	    }
+
+	    // Main method for running the test methods
+	    public static void main(String[] args) {
+	        
+	        org.testng.TestNG.main(new String[]{"NewTest.java"});
+	    }
+}
+
+
