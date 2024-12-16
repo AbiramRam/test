@@ -21,3 +21,31 @@ Switch1(config-if)# switchport access vlan 20
 Switch1(config)# interface fa0/3
 Switch1(config-if)# switchport mode trunk
 Switch1(config-if)# switchport trunk allowed vlan 10,20
+
+enable 
+configure terminal
+
+vlan 10
+name VLAN10
+vlan 20
+name VLAN20
+exit
+
+interface fa0/1
+switchport mode access
+switchport access vlan 10
+exit
+
+interface fa0/2
+switchport mode access
+switchport access vlan 20
+exit
+
+interface fa1/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20
+exit
+
+
+
