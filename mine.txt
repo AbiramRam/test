@@ -1,0 +1,23 @@
+Switch1(config)# vlan 10
+Switch1(config-vlan)# name VLAN10
+Switch1(config-vlan)# exit
+
+Switch1(config)# vlan 20
+Switch1(config-vlan)# name VLAN20
+Switch1(config-vlan)# exit
+
+Switch1(config)# interface fa0/0
+Switch1(config-if)# switchport mode access
+Switch1(config-if)# switchport access vlan 10
+
+Switch1(config)# interface fa0/1
+Switch1(config-if)# switchport mode access
+Switch1(config-if)# switchport access vlan 10
+
+Switch1(config)# interface fa0/2
+Switch1(config-if)# switchport mode access
+Switch1(config-if)# switchport access vlan 20
+
+Switch1(config)# interface fa0/3
+Switch1(config-if)# switchport mode trunk
+Switch1(config-if)# switchport trunk allowed vlan 10,20
