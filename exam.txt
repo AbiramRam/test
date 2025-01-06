@@ -1,139 +1,72 @@
-public class Rail {
-    
-    public static String encrypt(String text, int key) {
-        if (key == 1) return text; 
+LOAD DATA INFILE '/path/to/Data.txt'
+INTO TABLE TableName
+FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
 
-        StringBuilder[] rail = new StringBuilder[key];
-        for (int i = 0; i < key; i++) {
-            rail[i] = new StringBuilder();
-        }
+CREATE USER 'MA01'@'localhost' IDENTIFIED BY 'Pqr@&12';
+GRANT INSERT, UPDATE ON College.* TO 'MA01'@'localhost';
+FLUSH PRIVILEGES;
 
-        int direction = 1; 
-        int row = 0;
+CREATE USER 'Staff01'@'localhost' IDENTIFIED BY 'Xyz@&12';
+GRANT UPDATE ON College.Marks TO 'Staff01'@'localhost';
+FLUSH PRIVILEGES;
 
-        for (char c : text.toCharArray()) {
-            rail[row].append(c);
-            row += direction;
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'MA01'@'localhost';
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'Staff01'@'localhost';
+DROP USER 'MA01'@'localhost';
+DROP USER 'Staff01'@'localhost';
 
-            if (row == 0 || row == key - 1) {
-                direction *= -1;
-            }
-        }
+start delimiter//
 
-        StringBuilder encrypted = new StringBuilder();
-        for (StringBuilder sb : rail) {
-            encrypted.append(sb);
-        }
+finisg procedure end//
 
-        return encrypted.toString();
-    }
-    
-    public static String decrypt(String cipherText, int key) {
-    if (key == 1) return cipherText;
-
-    int length = cipherText.length();
-    char[] decrypted = new char[length];
-    boolean[] visited = new boolean[length];
-
-    int index = 0;
-    for (int r = 0; r < key; r++) {
-        int direction = 1;
-        int row = 0;
-        for (int i = 0; i < length; i++) {
-            if (row == r && !visited[i]) {
-                decrypted[i] = cipherText.charAt(index++);
-                visited[i] = true;
-            }
-            row += direction;
-            if (row == 0 || row == key - 1) direction *= -1;
-        }
-    }
-    return new String(decrypted);
-}
+delimiter ;
 
 
-import java.util.*; // Encryption and Decryption methods
-public class CaesarCipher
-{
-	String readtext;
-	char Arraytext[];
-	char alphbet[]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-	
-	int k,key; // give integer value as the key
-	static Scanner s=new Scanner(System.in);
-	
-	public CaesarCipher()
-	
-	{
-		System.out.print("Enter your text:");
-		readtext=s.nextLine();
-		System.out.print("Enter your key:");
-		key=s.nextInt();
-		readtext=readtext.toUpperCase();
-		Arraytext=readtext.toCharArray();
-	}
-	public void Encript()// Encryption method
-	{
+CREATE PROCEDURE CountMaleFemale()
+BEGIN
+    SELECT Semester, Section, 
+           SUM(CASE WHEN Gender = 'Male' THEN 1 ELSE 0 END) AS MaleCount,
+           SUM(CASE WHEN Gender = 'Female' THEN 1 ELSE 0 END) AS FemaleCount
+    FROM Student
+    GROUP BY Semester, Section;
+END;
 
-		for (int i=0; i<Arraytext.length;i++)
-		{
-			if(Arraytext[i]==' '){
-				System.out.print(' ');
-				continue;
-			}
-				
-			for (int j=0; j<alphbet.length;j++)
-			{
-				
-				if(Arraytext[i]==alphbet[j])
-				{
-					k=(j+key)%26;
-					//System.out.println(k);
-				}
-				
-			}
-			System.out.print(alphbet[k]);
-		}
-	}
-	public void Decript()// Decryption method
-	{
-		
-		for (int i=0; i<Arraytext.length;i++)
-		{
-			if(Arraytext[i]==' '){
-				System.out.print(' ');
-				continue;
-			}
-			
-			for (int j=0; j<alphbet.length;j++)
-			{
-				if(Arraytext[i]==alphbet[j])
-				{
-					k=(j-key+26)%26;
-				}
-				
-			}
-			System.out.print(alphbet[k]);
-		}
-	}
-	public static void main(String[]args)
-	{
-		CaesarCipher c=new CaesarCipher();
-	
-		System.out.print("Do you want Encript(1) or Decript(0)? .....(1/0):");
-		int choose=s.nextInt();
-		if(choose==1)
-		
-			c.Encript();
-		
-		
-		else
-			
-			c.Decript();
-		
-	}
-}
+CREATE PROCEDURE InsertSubjectRecords()
+BEGIN
+    INSERT INTO Subject (Subcode, Title, Sem, Credits) VALUES
+    ('10CS81', 'ACA', 8, 4),
+    ('10CS82', 'SSM', 8, 4);
+END;
 
-	
-	
-	
+CREATE TABLE Old_Marks (
+    USN VARCHAR(10),
+    Subcode VARCHAR(10),
+    SSID VARCHAR(10),
+    Test1 INT,
+    Test2 INT,
+    Test3 INT,
+    Final INT
+);
+
+CREATE TRIGGER MoveToOldMarks
+AFTER DELETE ON Marks
+FOR EACH ROW
+BEGIN
+    INSERT INTO Old_Marks (USN, Subcode, SSID, Test1, Test2, Test3, Final)
+    VALUES (OLD.USN, OLD.Subcode, OLD.SSID, OLD.Test1, OLD.Test2, OLD.Test3, OLD.Final);
+END;
+
+CREATE TRIGGER CorrectCredits
+BEFORE INSERT ON Subject
+FOR EACH ROW
+BEGIN
+    IF NEW.Credits < 3 THEN
+        SET NEW.Credits = 3;
+    END IF;
+END;
+
+BACKUP TABLE Lecturer TO '/path/to/backup';
+
+
